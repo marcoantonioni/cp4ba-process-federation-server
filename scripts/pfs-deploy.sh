@@ -65,7 +65,13 @@ if [ $? -eq 0 ]; then
 fi
 
 getPfsAdminInfo true
-# createPfs
-# waitForResourceCreated ${PFS_NAMESPACE} pfs ${PFS_NAME} 10
+resourceExist ${PFS_NAMESPACE} pfs ${PFS_NAME}
+if [ $? -eq 0 ]; then
+  echo "Ready to install..."
+  createPfs
+  waitForResourceCreated ${PFS_NAMESPACE} pfs ${PFS_NAME} 5
+else
+  echo ${PFS_NAME}" already installed..."
+fi
 waitForPfsReady ${PFS_NAMESPACE} ${PFS_NAME} 5
 showPFSUrls ${PFS_NAMESPACE} ${PFS_NAME}
