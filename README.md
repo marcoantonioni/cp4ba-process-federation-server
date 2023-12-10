@@ -8,37 +8,12 @@
 ```
 
 #-----------------------------------------
-PFS_NAME="pfs-demo"
-TNS="cp4ba-wfps-runtime1"
-
-cat <<EOF | oc create -f -
-apiVersion: icp4a.ibm.com/v1
-kind: ProcessFederationServer
-metadata:
-  name: ${PFS_NAME}
-  namespace: ${TNS}
-spec:
-  appVersion: 23.0.1  
-  license:
-    accept: true
-  shared_configuration: 
-    sc_deployment_license: production
-    storage_configuration:
-      sc_medium_file_storage_classname: managed-nfs-storage
-      sc_slow_file_storage_classname: managed-nfs-storage
-  pfs_configuration:
-    admin_user_id:
-      - cpadmin
-    replicas: 1
-EOF
-
-#-----------------------------------------
 
 # openapi
 
 https://cpd-cp4ba-wfps-runtime1.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/openapi/index.html
 
-# configurazione federazion
+# configurazione federazione
 https://cpd-cp4ba.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/v1/systems
 
 # nessun server federato
@@ -49,7 +24,7 @@ https://cpd-cp4ba.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/
   "status":500
 }
 
-# alemno un server federato
+# almeno un server federato
 {
   "federationResult": [
     {
