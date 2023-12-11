@@ -2,6 +2,17 @@
 
 ## Create process federation server
 ```
+cd ./scripts
+./pfs-deploy.sh -c ../configs/pfs1.properties
+```
+
+## Show federated servers
+```
+# only names
+./pfs-show-federated.sh -c ../configs/pfs1.properties
+
+# all details
+./pfs-show-federated.sh -c ../configs/pfs1.properties -d
 ```
 
 ### notes
