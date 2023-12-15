@@ -15,17 +15,43 @@ cd ./scripts
 ./pfs-show-federated.sh -c ../configs/pfs1.properties -d
 ```
 
+## Show federated contents
+```
+# only tasks
+./pfs-show-contents.sh -c ../configs/pfs1.properties -t
+
+# only processes
+./pfs-show-contents.sh -c ../configs/pfs1.properties -p
+
+# only launchable entities
+./pfs-show-contents.sh -c ../configs/pfs1.properties -l
+
+# all
+./pfs-show-contents.sh -c ../configs/pfs1.properties -a
+
+# you may combine any parameters but -a
+```
+
 ### notes
 ```
 
 #-----------------------------------------
 
 # openapi
+https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/openapi/index.html
 
-https://cpd-cp4ba-wfps-runtime1.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/openapi/index.html
+# launchable entities from all federated servers
+https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/v1/launchableEntities
+
+# tasks
+https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/v1/tasks?interaction=all
+
+# processes
+https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/v1/instances?size=10&offset=10
+
 
 # configurazione federazione
-https://cpd-cp4ba.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/v1/systems
+https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/v1/systems
 
 # nessun server federato
 {
