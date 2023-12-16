@@ -1,5 +1,22 @@
 # cp4ba-process-federation-server
 
+This repository contains a series of examples and tools for creating and configuring containerized Process Federation Servers in IBM Cloud Pak for Business Automation deployment.
+
+<b>**WARNING**</b>:
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+<br>
+<i>
+This software and the configurations contained in the repository MUST be considered as examples for educational purposes.
+<br>
+Do not use in a production environment without making your own necessary modifications.
+</i>
+<br>
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+<b>WARNING</b>: before run any command please update configuration files with your values
+
 ## Create process federation server
 ```
 cd ./scripts
