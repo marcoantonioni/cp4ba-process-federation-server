@@ -48,19 +48,24 @@ showFederatedServers () {
   _CRED="-u ${PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
   RESPONSE=$(curl -sk -H "Authorization: Bearer ${ZEN_TK}" -H 'accept: application/json'  -X GET "${PFS_URL_REST}/v1/systems")
 
-  _NUM_SRVS=$(echo ${RESPONSE} | jq '.systems | length')
-  echo -n "Process Federation Server '${PFS_NAME}' has "${_NUM_SRVS}" federated servers"
-  if [[ "${_NUM_SRVS}" != "0" ]]; then
-    if [[ "${_DETAILS}" = "true" ]]; then
-      echo ""
-      echo ""
-      echo ${RESPONSE} | jq .
-    else
-      echo " (use -d parameter for detailed output)"
-      echo ""
-      echo ${RESPONSE} | jq .systems[].hostname | sed 's/"//g'
+  if [[ "${RESPONSE}" == *"Error"* ]]; then
+    echo "ERROR: "$RESPONSE
+  else
+    _NUM_SRVS=$(echo ${RESPONSE} | jq '.systems | length')
+    echo -n "Process Federation Server '${PFS_NAME}' has "${_NUM_SRVS}" federated servers"
+    if [[ "${_NUM_SRVS}" != "0" ]]; then
+      if [[ "${_DETAILS}" = "true" ]]; then
+        echo ""
+        echo ""
+        echo ${RESPONSE} | jq .
+      else
+        echo " (use -d parameter for detailed output)"
+        echo ""
+        echo ${RESPONSE} | jq .systems[].hostname | sed 's/"//g'
+      fi
     fi
   fi
+
   echo ""
 }
 

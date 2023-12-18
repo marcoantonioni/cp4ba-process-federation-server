@@ -20,7 +20,11 @@ Do not use in a production environment without making your own necessary modific
 ## Create process federation server
 ```
 cd ./scripts
-./pfs-deploy.sh -c ../configs/pfs1.properties
+time ./pfs-deploy.sh -c ../configs/pfs1.properties
+
+# BAStudio dev env
+time ./pfs-deploy.sh -c ../configs/pfs-bastudio.properties
+
 ```
 
 ## Show federated servers
@@ -48,6 +52,11 @@ cd ./scripts
 
 # you may combine any parameters but -a
 ```
+
+# References
+
+Installing a CP4BA Process Federation Server production deployment
+[https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment)
 
 ### notes
 ```
