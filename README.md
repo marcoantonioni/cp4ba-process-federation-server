@@ -18,12 +18,20 @@ Do not use in a production environment without making your own necessary modific
 <b>WARNING</b>: before run any command please update configuration files with your values
 
 ## Create process federation server
+
+Before creating the PFS deployment verify the presence of 'elasticsearch' in 'shared_configuration.sc_optional_components'.
+
+The PFS operator will fail if 'elasticsearch' is not found.
+
 ```
 cd ./scripts
 time ./pfs-deploy.sh -c ../configs/pfs1.properties
 
 # BAStudio dev env
 time ./pfs-deploy.sh -c ../configs/pfs-bastudio.properties
+
+# BAW test env
+time ./pfs-deploy.sh -c ../configs/pfs-cp4ba-test1.properties
 
 ```
 
