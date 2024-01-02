@@ -21,27 +21,27 @@ storageClassExist () {
 #-------------------------------
 verifyAllParams () {
 
-  isParamSet $PFS_STORAGE_CLASS}
+  isParamSet $CP4BA_INST_PFS_STORAGE_CLASS}
   if [ $? -eq 0 ]; then
-      echo "ERROR: PFS_STORAGE_CLASS not set"
+      echo "ERROR: CP4BA_INST_PFS_STORAGE_CLASS not set"
       exit 1
   fi
 
-  isParamSet ${PFS_NAME}
+  isParamSet ${CP4BA_INST_PFS_NAME}
   if [ $? -eq 0 ]; then
-      echo "ERROR: PFS_NAME not set"
+      echo "ERROR: CP4BA_INST_PFS_NAME not set"
       exit 1
   fi
 
-  isParamSet ${PFS_NAMESPACE}
+  isParamSet ${CP4BA_INST_PFS_NAMESPACE}
   if [ $? -eq 0 ]; then
-      echo "ERROR: PFS_NAMESPACE not set"
+      echo "ERROR: CP4BA_INST_PFS_NAMESPACE not set"
       exit 1
   fi
 
-  isParamSet ${PFS_APP_VER}
+  isParamSet ${CP4BA_INST_PFS_APP_VER}
   if [ $? -eq 0 ]; then
-      echo "ERROR: PFS_APP_VER not set"
+      echo "ERROR: CP4BA_INST_PFS_APP_VER not set"
       exit 1
   fi
 
@@ -124,9 +124,9 @@ showPFSUrls() {
 #--------------------------------------------------------
 getPfsAdminInfo () {
   # $1: boolean skip urls 
-  PFS_ADMINUSER=$(oc get secrets -n ${PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d)
-  PFS_ADMINPASSWORD=$(oc get secrets -n ${PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d)
-  if [[ -z "${PFS_ADMINUSER}" ]]; then
+  CP4BA_INST_PFS_ADMINUSER=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d)
+  PFS_ADMINPASSWORD=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d)
+  if [[ -z "${CP4BA_INST_PFS_ADMINUSER}" ]]; then
     echo "ERROR cannot get admin user name from secret"
     exit 1
   fi
@@ -135,11 +135,11 @@ getPfsAdminInfo () {
     exit 1
   fi
   if [[ ! "$1" = "true" ]]; then
-    resourceExist ${PFS_NAMESPACE} pfs ${PFS_NAME}
+    resourceExist ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME}
     if [ $? -eq 1 ]; then
-      getPFSUrls ${PFS_NAMESPACE} ${PFS_NAME}
+      getPFSUrls ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME}
     else
-      echo "WARNING: pfs '${PFS_NAME}' not present in namespace '${PFS_NAMESPACE}'"
+      echo "WARNING: pfs '${CP4BA_INST_PFS_NAME}' not present in namespace '${CP4BA_INST_PFS_NAMESPACE}'"
     fi
   fi
 }

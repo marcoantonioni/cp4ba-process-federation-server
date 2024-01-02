@@ -28,20 +28,20 @@ cat <<EOF | oc create -f -
 apiVersion: icp4a.ibm.com/v1
 kind: ProcessFederationServer
 metadata:
-  name: ${PFS_NAME}
-  namespace: ${PFS_NAMESPACE}
+  name: ${CP4BA_INST_PFS_NAME}
+  namespace: ${CP4BA_INST_PFS_NAMESPACE}
 spec:
-  appVersion: ${PFS_APP_VER}
+  appVersion: ${CP4BA_INST_PFS_APP_VER}
   license:
     accept: true
   shared_configuration: 
     sc_deployment_license: production
     storage_configuration:
-      sc_medium_file_storage_classname: ${PFS_STORAGE_CLASS}
-      sc_slow_file_storage_classname: ${PFS_STORAGE_CLASS}
+      sc_medium_file_storage_classname: ${CP4BA_INST_PFS_STORAGE_CLASS}
+      sc_slow_file_storage_classname: ${CP4BA_INST_PFS_STORAGE_CLASS}
   pfs_configuration:
     admin_user_id:
-      - ${PFS_ADMINUSER}
+      - ${CP4BA_INST_PFS_ADMINUSER}
     replicas: 1
 EOF
 
@@ -58,20 +58,20 @@ source ${CONFIG_FILE}
 
 verifyAllParams
 
-storageClassExist ${PFS_STORAGE_CLASS}
+storageClassExist ${CP4BA_INST_PFS_STORAGE_CLASS}
 if [ $? -eq 0 ]; then
     echo "ERROR: Storage class not found"
     exit
 fi
 
 getPfsAdminInfo true
-resourceExist ${PFS_NAMESPACE} pfs ${PFS_NAME}
+resourceExist ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME}
 if [ $? -eq 0 ]; then
   echo "Ready to install..."
   createPfs
-  waitForResourceCreated ${PFS_NAMESPACE} pfs ${PFS_NAME} 5
+  waitForResourceCreated ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME} 5
 else
-  echo ${PFS_NAME}" already installed..."
+  echo ${CP4BA_INST_PFS_NAME}" already installed..."
 fi
-waitForPfsReady ${PFS_NAMESPACE} ${PFS_NAME} 5
-showPFSUrls ${PFS_NAMESPACE} ${PFS_NAME}
+waitForPfsReady ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME} 5
+showPFSUrls ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME}

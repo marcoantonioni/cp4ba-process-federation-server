@@ -46,20 +46,20 @@ getTokens () {
 
   # get IAM access token
   IAM_ACCESS_TK=$(curl -sk -X POST -H "Content-Type: application/x-www-form-urlencoded;charset=UTF-8" \
-        -d "grant_type=password&username=${PFS_ADMINUSER}&password=${PFS_ADMINPASSWORD}&scope=openid" \
+        -d "grant_type=password&username=${CP4BA_INST_PFS_ADMINUSER}&password=${PFS_ADMINPASSWORD}&scope=openid" \
         ${CONSOLE_HOST}/idprovider/v1/auth/identitytoken | jq -r .access_token)
 
   echo ""
-  ZEN_TK=$(curl -sk "${PAK_HOST}/v1/preauth/validateAuth" -H "username:${PFS_ADMINUSER}" -H "iam-token: ${IAM_ACCESS_TK}" | jq -r .accessToken)
+  ZEN_TK=$(curl -sk "${PAK_HOST}/v1/preauth/validateAuth" -H "username:${CP4BA_INST_PFS_ADMINUSER}" -H "iam-token: ${IAM_ACCESS_TK}" | jq -r .accessToken)
 }
 
 
 #--------------------------------------------------------
 showTasks () {
   echo "--------------------------------------------------------------"
-  echo "Task list from Process Federation Server '${PFS_NAME}'"
+  echo "Task list from Process Federation Server '${CP4BA_INST_PFS_NAME}'"
   _URL=${PFS_URL_REST}""
-  _CRED="-u ${PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
+  _CRED="-u ${CP4BA_INST_PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
   RESPONSE=$(curl -sk -H "Authorization: Bearer ${ZEN_TK}" -H 'accept: application/json' -X GET "${PFS_URL_REST}/v1/tasks?interaction=all")
   echo ${RESPONSE} | jq .items
   _NUM_TASKS=$(echo $RESPONSE | jq .size)
@@ -70,9 +70,9 @@ showTasks () {
 #--------------------------------------------------------
 showProcesses () {
   echo "--------------------------------------------------------------"
-  echo "Process list from Process Federation Server '${PFS_NAME}'"
+  echo "Process list from Process Federation Server '${CP4BA_INST_PFS_NAME}'"
   _URL=${PFS_URL_REST}""
-  _CRED="-u ${PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
+  _CRED="-u ${CP4BA_INST_PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
   RESPONSE=$(curl -sk -X 'PUT' ${PFS_URL_REST}/v1/instances \
       -H 'accept: application/json' -H 'Content-Type: application/json' -H "Authorization: Bearer ${ZEN_TK}" \
       -d '{ "shared": true, "teams": [ ], "interaction": "all", "size": 25, "name": "MySavedSearch", "sort": [ { "field": "instanceDueDate", "order": "ASC" } ], "conditions": [ ], "fields": [ "instanceDueDate", "instanceName", "instanceId", "instanceStatus", "instanceProcessApp", "instanceSnapshot", "bpdName" ]}')
@@ -85,9 +85,9 @@ showProcesses () {
 #--------------------------------------------------------
 showLaunchableEntities () {
   echo "--------------------------------------------------------------"
-  echo "Launchable entities from Process Federation Server '${PFS_NAME}'"
+  echo "Launchable entities from Process Federation Server '${CP4BA_INST_PFS_NAME}'"
   _URL=${PFS_URL_REST}""
-  _CRED="-u ${PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
+  _CRED="-u ${CP4BA_INST_PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
   RESPONSE=$(curl -sk -H "Authorization: Bearer ${ZEN_TK}" -H 'accept: application/json'  -X GET "${PFS_URL_REST}/v1/launchableEntities")
   echo ${RESPONSE} | jq .items
   _NUM_ENTS=$(echo ${RESPONSE} | jq '.items | length')
@@ -120,7 +120,7 @@ source ${CONFIG_FILE}
 
 verifyAllParams
 getPfsAdminInfo
-getTokens ${PFS_NAMESPACE}
+getTokens ${CP4BA_INST_PFS_NAMESPACE}
 
 showContents
 
