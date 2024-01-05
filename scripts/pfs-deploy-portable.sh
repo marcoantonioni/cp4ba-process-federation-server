@@ -2,12 +2,15 @@
 
 _me=$(basename "$0")
 
+_WAIT=true
+
 #--------------------------------------------------------
 # read command line params
-while getopts c: flag
+while getopts c:f flag
 do
     case "${flag}" in
         c) _CFG=${OPTARG};;
+        f) _WAIT=false;;
     esac
 done
 
@@ -214,6 +217,9 @@ if [ $? -eq 0 ]; then
 else
   echo ${CP4BA_INST_PFS_NAME}" already installed..."
 fi
-waitForPfsReady ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME} 5
-showPFSUrls ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME}
+
+if [[ "${_WAIT}" = "true" ]]; then
+  waitForPfsReady ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME} 5
+  showPFSUrls ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME}
+fi
 exit 0
