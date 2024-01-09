@@ -17,6 +17,37 @@ Do not use in a production environment without making your own necessary modific
 
 <b>WARNING</b>: before run any command please update configuration files with your values
 
+Please use '-stable' versions, the main branch may contain untested functionality.
+
+See '[Prerequisites](#Prerequisites)' section before deploying PFS servers.
+
+All examples make use of dynamic storage, the presence of a storage class for dynamic volume allocation is required.
+
+The tools '<i>oc</i>' and '<i>jq</i>' are required.
+
+The '<i>openssl</i>' tool is required only for the integration scenario with external services protected by TLS transports.
+
+All examples and scripts are only available for Linux boxes with <i>bash</i> shell.
+
+<b>WARNING</b>: before run any command please update configuration files with your values.
+
+## Description of configuration files and variables
+
+PFS configuration file variables
+```
+CP4BA_INST_PFS_NAME=<name-of-cr> # any name k8s compatible
+CP4BA_INST_PFS_NAMESPACE=<target-namespace> # any name k8s compatible
+CP4BA_INST_PFS_STORAGE_CLASS=<name-of-file-type-storage-class> # select one available from your OCP cluster
+CP4BA_INST_PFS_APP_VER=<cp4ba-version-number> (eg: 23.0.2)
+CP4BA_INST_PFS_ADMINUSER=<admin-user-name> # any user in your IDP/LDAP configuration (eg: "cpadmin")
+```
+
+## Prerequisites
+
+To continue with the deployment examples, the following prerequisites must be met:
+
+- The destination namespace must contain at least a running Foundation deployment (a starter deployment configuration is enough).
+
 ## Create process federation server
 
 Before creating the PFS deployment verify the presence of 'elasticsearch' in 'shared_configuration.sc_optional_components'.
@@ -26,9 +57,6 @@ The PFS operator will fail if 'elasticsearch' is not found.
 ```
 cd ./scripts
 time ./pfs-deploy.sh -c ../configs/pfs1.properties
-
-# BAStudio dev env
-time ./pfs-deploy.sh -c ../configs/pfs-bastudio.properties
 
 # BAW test env
 time ./pfs-deploy.sh -c ../configs/pfs-cp4ba-test1.properties
@@ -62,32 +90,39 @@ time ./pfs-deploy.sh -c ../configs/pfs-cp4ba-test1.properties
 ```
 
 # References
+Planning for a CP4BA Process Federation Server production deployment
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployment-planning-cp4ba-process-federation-server-production
 
 Installing a CP4BA Process Federation Server production deployment
 [https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment)
 
-### notes
+
+Administering and operating IBM Process Federation Server Containers
+[https://github.com/icp4a/process-federation-server-containers](https://github.com/icp4a/process-federation-server-containers)
+
+
+# Notes
 ```
-
-#-----------------------------------------
-
-# openapi
-https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/openapi/index.html
+# openapi web page
+https://<host-name>/pfs/rest/bpm/federated/openapi/index.html
 
 # launchable entities from all federated servers
-https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/v1/launchableEntities
+https://<host-name>/pfs/rest/bpm/federated/v1/launchableEntities
 
 # tasks
-https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/v1/tasks?interaction=all
+https://<host-name>/pfs/rest/bpm/federated/v1/tasks?interaction=all
 
 # processes
-https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/v1/instances?size=10&offset=10
+https://<host-name>/pfs/rest/bpm/federated/v1/instances?size=10&offset=10
 
 
-# configurazione federazione
-https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com/pfs/rest/bpm/federated/v1/systems
+# active federated systems
+https://<host-name>/pfs/rest/bpm/federated/v1/systems
+```
 
-# nessun server federato
+## active federated systems - output samples
+```
+# no federated servers
 {
   "exceptionType":"NoFederatedsystemException",
   "errorMessage":"CWMFS4021E: There is no federated system declared in Process Federation Server configuration.","errorMessageParameters":[],
@@ -95,16 +130,16 @@ https://cpd-cp4ba-wfps-federated.apps.654892a90ae5f40017a3834c.cloud.techzone.ib
   "status":500
 }
 
-# almeno un server federato
+# one or more federated servers
 {
   "federationResult": [
     {
-      "restUrlPrefix": "https:\/\/cpd-cp4ba-wfps-runtime1.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com\/wfps-t1-wfps\/rest\/bpm\/wle",
+      "restUrlPrefix": "https:\/\/cpd-cp4ba-wfps-runtime1.apps.......cloud.techzone.ibm.com\/wfps-t1-wfps\/rest\/bpm\/wle",
       "systemID": "5c160893-9087-42f8-9b31-8485fbaeea2f",
       "displayName": "5c160893-9087-42f8-9b31-8485fbaeea2f",
       "systemType": "SYSTEM_TYPE_WLE",
       "id": "5c160893-9087-42f8-9b31-8485fbaeea2f",
-      "taskCompletionUrlPrefix": "https:\/\/cpd-cp4ba-wfps-runtime1.apps.654892a90ae5f40017a3834c.cloud.techzone.ibm.com\/wfps-t1-wfps\/teamworks",
+      "taskCompletionUrlPrefix": "https:\/\/cpd-cp4ba-wfps-runtime1.apps......cloud.techzone.ibm.com\/wfps-t1-wfps\/teamworks",
       "version": "8.6.5.23010",
       "indexRefreshInterval": 2000,
       "statusCode": "200"
