@@ -52,7 +52,7 @@ To continue with the deployment examples, the following prerequisites must be me
 
 Before creating the PFS deployment verify the presence of 'elasticsearch' in 'shared_configuration.sc_optional_components'.
 
-The PFS operator will fail if 'elasticsearch' is not found.
+The PFS operator will wait undefinitely if 'elasticsearch' is not set.
 
 ```
 cd ./scripts
