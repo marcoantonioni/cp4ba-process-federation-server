@@ -3,6 +3,19 @@
 _me=$(basename "$0")
 
 #--------------------------------------------------------
+_CLR_RED="\033[0;31m"   #'0;31' is Red's ANSI color code
+_CLR_GREEN="\033[0;32m"   #'0;32' is Green's ANSI color code
+_CLR_YELLOW="\033[1;32m"   #'1;32' is Yellow's ANSI color code
+_CLR_BLUE="\033[0;34m"   #'0;34' is Blue's ANSI color code
+_CLR_NC="\033[0m"
+
+usage () {
+  echo ""
+  echo -e "${_CLR_GREEN}usage: $_me
+    -c full-path-to-config-file{_CLR_NC}"
+}
+
+#--------------------------------------------------------
 # read command line params
 while getopts c: flag
 do
@@ -12,8 +25,8 @@ do
 done
 
 if [[ -z "${_CFG}" ]]; then
-  echo "usage: $_me -c path-of-config-file"
-  exit
+  usage
+  exit 1
 fi
 
 export CONFIG_FILE=${_CFG}
@@ -54,6 +67,12 @@ echo "****** PFS Runtime Deployment ******"
 echo "*************************************"
 echo "Using config file: "${CONFIG_FILE}
 
+if [[ ! -f "${_CFG}" ]]; then
+  echo "Configuration file not found: "${_CFG}
+  usage
+  exit 1
+fi
+
 source ${CONFIG_FILE}
 
 verifyAllParams
@@ -61,7 +80,7 @@ verifyAllParams
 storageClassExist ${CP4BA_INST_PFS_STORAGE_CLASS}
 if [ $? -eq 0 ]; then
     echo "ERROR: Storage class not found"
-    exit
+    exit 1
 fi
 
 getPfsAdminInfo true

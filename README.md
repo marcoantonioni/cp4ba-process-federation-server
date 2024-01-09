@@ -48,19 +48,17 @@ To continue with the deployment examples, the following prerequisites must be me
 
 - The destination namespace must contain at least a running Foundation deployment (a starter deployment configuration is enough).
 
+- Before creating the PFS deployment verify the presence of 'elasticsearch' in 'shared_configuration.sc_optional_components'. The PFS operator will wait undefinitely if 'elasticsearch' is not set.
+
 ## Create process federation server
-
-Before creating the PFS deployment verify the presence of 'elasticsearch' in 'shared_configuration.sc_optional_components'.
-
-The PFS operator will wait undefinitely if 'elasticsearch' is not set.
 
 ```
 cd ./scripts
 time ./pfs-deploy.sh -c ../configs/pfs1.properties
 
-# BAW test env
-time ./pfs-deploy.sh -c ../configs/pfs-cp4ba-test1.properties
-
+# used for PFS-BAW-WFPS demos
+cd ./scripts
+time ./pfs-deploy.sh -c ../configs/demo-wfps-baw.properties
 ```
 
 ## Show federated servers
