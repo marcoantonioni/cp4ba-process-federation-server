@@ -29,6 +29,11 @@ if [[ -z "${_CFG}" ]]; then
   exit 1
 fi
 
+if [[ ! -f "${_CFG}" ]]; then
+  echo "Configuration file not found: "${_CFG}
+  exit 1
+fi
+
 export CONFIG_FILE=${_CFG}
 
 source ./pfs-utils.sh
