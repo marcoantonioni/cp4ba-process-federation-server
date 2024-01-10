@@ -57,7 +57,7 @@ showFederatedServers () {
     echo "ERROR: "$RESPONSE
   else
     _NUM_SRVS=$(echo ${RESPONSE} | jq '.systems | length')
-    echo -n "Process Federation Server '${CP4BA_INST_PFS_NAME}' has "${_NUM_SRVS}" federated servers"
+    echo -n "Process Federation Server '${CP4BA_INST_PFS_NAME}' has "${_NUM_SRVS}" federated servers ready"
     if [[ "${_NUM_SRVS}" != "0" ]]; then
       if [[ "${_DETAILS}" = "true" ]]; then
         echo ""
