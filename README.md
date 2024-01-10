@@ -1,5 +1,7 @@
 # cp4ba-process-federation-server
 
+<i>Last update: 2024-01-10</i> use '<b>1.0.0-stable</b>'
+
 This repository contains a series of examples and tools for creating and configuring containerized Process Federation Servers in IBM Cloud Pak for Business Automation deployment.
 
 <b>**WARNING**</b>:
@@ -173,3 +175,18 @@ https://<host-name>/pfs/rest/bpm/federated/v1/systems
 
 ```
 
+# References
+
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment
+
+Administering and operating IBM Process Federation Server Containers
+https://github.com/icp4a/process-federation-server-containers
+
+
+TOOLS
+
+Openshift CLI
+https://docs.openshift.com/container-platform/4.14/cli_reference/openshift_cli/getting-started-cli.html
+
+JQ
+https://jqlang.github.io/jq/
