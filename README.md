@@ -96,6 +96,8 @@ https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployment
 Installing a CP4BA Process Federation Server production deployment
 [https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment)
 
+Other useful informations about PFS when used with BAW
+[https://community.ibm.com/community/user/automation/blogs/zhili-guan/2023/08/24/topology-of-baw-on-containers-2301](https://community.ibm.com/community/user/automation/blogs/zhili-guan/2023/08/24/topology-of-baw-on-containers-2301)
 
 Administering and operating IBM Process Federation Server Containers
 [https://github.com/icp4a/process-federation-server-containers](https://github.com/icp4a/process-federation-server-containers)
