@@ -101,6 +101,15 @@ Administering and operating IBM Process Federation Server Containers
 [https://github.com/icp4a/process-federation-server-containers](https://github.com/icp4a/process-federation-server-containers)
 
 
+TOOLS
+
+Openshift CLI
+[https://docs.openshift.com/container-platform/4.14/cli_reference/openshift_cli/getting-started-cli.html](https://docs.openshift.com/container-platform/4.14/cli_reference/openshift_cli/getting-started-cli.html)
+
+JQ
+[https://jqlang.github.io/jq](https://jqlang.github.io/jq)
+
+
 # Notes
 ```
 # openapi web page
@@ -174,19 +183,3 @@ https://<host-name>/pfs/rest/bpm/federated/v1/systems
 }
 
 ```
-
-# References
-
-https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment
-
-Administering and operating IBM Process Federation Server Containers
-https://github.com/icp4a/process-federation-server-containers
-
-
-TOOLS
-
-Openshift CLI
-https://docs.openshift.com/container-platform/4.14/cli_reference/openshift_cli/getting-started-cli.html
-
-JQ
-https://jqlang.github.io/jq/
