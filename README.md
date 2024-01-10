@@ -98,6 +98,7 @@ Installing a CP4BA Process Federation Server production deployment
 
 Other useful informations about PFS when used with BAW
 [https://community.ibm.com/community/user/automation/blogs/zhili-guan/2023/08/24/topology-of-baw-on-containers-2301](https://community.ibm.com/community/user/automation/blogs/zhili-guan/2023/08/24/topology-of-baw-on-containers-2301)
+
 [https://community.ibm.com/community/user/automation/blogs/julien-carnec/2023/03/10/federating-on-prem-baw-from-pfs-on-containers](https://community.ibm.com/community/user/automation/blogs/julien-carnec/2023/03/10/federating-on-prem-baw-from-pfs-on-containers)
 
 Administering and operating IBM Process Federation Server Containers
