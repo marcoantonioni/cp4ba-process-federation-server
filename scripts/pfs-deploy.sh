@@ -36,13 +36,26 @@ fi
 
 export CONFIG_FILE=${_CFG}
 
-source ./pfs-utils.sh
+
+_SCRIPT_PATH="${BASH_SOURCE}"
+while [ -L "${_SCRIPT_PATH}" ]; do
+  _SCRIPT_DIR="$(cd -P "$(dirname "${_SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
+  _SCRIPT_PATH="$(readlink "${_SCRIPT_PATH}")"
+  [[ ${_SCRIPT_PATH} != /* ]] && _SCRIPT_PATH="${_SCRIPT_DIR}/${_SCRIPT_PATH}"
+done
+_SCRIPT_PATH="$(readlink -f "${_SCRIPT_PATH}")"
+_SCRIPT_DIR="$(cd -P "$(dirname -- "${_SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
+
+source $_SCRIPT_DIR/pfs-utils.sh
 
 
 #--------------------------------------------------------
 createPfs () {
 
-cat <<EOF | oc create -f -
+mkdir -p $_SCRIPT_DIR/../output
+OUT_FILE=$_SCRIPT_DIR/../output/${CP4BA_INST_PFS_NAME}.yaml
+
+cat <<EOF > $OUT_FILE
 apiVersion: icp4a.ibm.com/v1
 kind: ProcessFederationServer
 metadata:
@@ -63,6 +76,8 @@ spec:
     replicas: 1
 EOF
 
+oc create -f $OUT_FILE
+
 }
 
 #==========================================
@@ -71,12 +86,6 @@ echo "*************************************"
 echo "****** PFS Runtime Deployment ******"
 echo "*************************************"
 echo "Using config file: "${CONFIG_FILE}
-
-if [[ ! -f "${_CFG}" ]]; then
-  echo "Configuration file not found: "${_CFG}
-  usage
-  exit 1
-fi
 
 source ${CONFIG_FILE}
 
