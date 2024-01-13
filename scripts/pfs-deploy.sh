@@ -73,7 +73,7 @@ spec:
   pfs_configuration:
     admin_user_id:
       - ${CP4BA_INST_PFS_ADMINUSER}
-    replicas: 1
+    replicas: 2
 EOF
 
 oc create -f $OUT_FILE
