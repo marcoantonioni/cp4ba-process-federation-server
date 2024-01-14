@@ -15,4 +15,4 @@ spec:
   pfs_configuration:
     admin_user_id:
       - cpadmin
-    replicas: 1
+    replicas: 2
