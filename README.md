@@ -1,6 +1,6 @@
 # cp4ba-process-federation-server
 
-<i>Last update: 2024-01-10</i> use '<b>1.0.0-stable</b>'
+<i>Last update: 2024-01-19</i> use '<b>1.0.0-stable</b>'
 
 ```
 > main always unstable
