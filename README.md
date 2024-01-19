@@ -2,6 +2,12 @@
 
 <i>Last update: 2024-01-10</i> use '<b>1.0.0-stable</b>'
 
+```
+> main always unstable
+
+> branch 1.0.0-stable
+```
+
 This repository contains a series of examples and tools for creating and configuring containerized Process Federation Servers in IBM Cloud Pak for Business Automation deployment.
 
 <b>**WARNING**</b>:

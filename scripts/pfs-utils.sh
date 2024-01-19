@@ -119,14 +119,16 @@ showPFSUrls() {
     echo "  url base: "${PFS_URL_BASE}
     echo "  url rest: "${PFS_URL_REST}
     echo "  url openapi explorer: "${PFS_URL_OPENAPI}
+    echo "  admin user: "${PFS_ADMINUSER}
+    echo "  admin password: "${PFS_ADMINPASSWORD}
 }
 
 #--------------------------------------------------------
 getPfsAdminInfo () {
   # $1: boolean skip urls 
-  CP4BA_INST_PFS_ADMINUSER=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d)
-  PFS_ADMINPASSWORD=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d)
-  if [[ -z "${CP4BA_INST_PFS_ADMINUSER}" ]]; then
+  export PFS_ADMINUSER=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d)
+  export PFS_ADMINPASSWORD=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d)
+  if [[ -z "${PFS_ADMINUSER}" ]]; then
     echo "ERROR cannot get admin user name from secret"
     exit 1
   fi
