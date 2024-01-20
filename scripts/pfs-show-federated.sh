@@ -62,7 +62,7 @@ showFederatedServers () {
   _CRED="-u ${CP4BA_INST_PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
   RESPONSE=$(curl -sk -H "Authorization: Bearer ${ZEN_TK}" -H 'accept: application/json'  -X GET "${PFS_URL_REST}/v1/systems")
 
-  if [[ "${RESPONSE}" == *"Error"* ]]; then
+  if [[ "${RESPONSE}" == *"error"* ]]; then
     echo "ERROR: "$RESPONSE
   else
     # count only non-null systemID
