@@ -65,7 +65,9 @@ showFederatedServers () {
   if [[ "${RESPONSE}" == *"Error"* ]]; then
     echo "ERROR: "$RESPONSE
   else
-    _NUM_SRVS=$(echo ${RESPONSE} | jq '.systems | length')
+    # count only non-null systemID
+    _NUM_SRVS=$(echo ${RESPONSE} | jq 'del(.systems[] | select(.systemID==null)) | .systems | length')
+
     echo -n "Process Federation Server '${CP4BA_INST_PFS_NAME}' has "${_NUM_SRVS}" federated servers ready"
     if [[ "${_NUM_SRVS}" != "0" ]]; then
       if [[ "${_DETAILS}" = "true" ]]; then
@@ -75,12 +77,12 @@ showFederatedServers () {
       else
         echo " (use -d parameter for detailed output)"
         echo ""
-        echo ${RESPONSE} | jq .systems[].hostname | sed 's/"//g'
+        echo ${RESPONSE} | jq 'del(.systems[] | select(.systemID==null)) | .systems[] | .hostname' | sed 's/"//g'
       fi
     fi
   fi
 
-  echo ""
+  echo
 }
 
 #==========================================
