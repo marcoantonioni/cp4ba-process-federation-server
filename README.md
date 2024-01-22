@@ -2,12 +2,10 @@
 
 Utilities for IBM Cloud Pak® for Business Automation
 
-<i>Last update: 2024-01-19</i> use '<b>1.0.0-stable</b>'
+<i>Last update: 2024-01-22</i> use '<b>1.0.1-stable</b>'
 
 ```
-> main always unstable
-
-> branch 1.0.0-stable
+> main maybe unstable
 ```
 
 This repository contains a series of examples and tools for creating and configuring containerized Process Federation Servers in IBM Cloud Pak for Business Automation deployment.
