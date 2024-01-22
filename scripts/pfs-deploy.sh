@@ -12,15 +12,18 @@ _CLR_NC="\033[0m"
 usage () {
   echo ""
   echo -e "${_CLR_GREEN}usage: $_me
-    -c full-path-to-config-file{_CLR_NC}"
+    -c full-path-to-config-file
+    -e (optional) embedded-run, no wait${_CLR_NC}"
 }
 
+_EMBEDDED_INST=false
 #--------------------------------------------------------
 # read command line params
-while getopts c: flag
+while getopts c:e flag
 do
     case "${flag}" in
         c) _CFG=${OPTARG};;
+        e) _EMBEDDED_INST=true;;
     esac
 done
 
@@ -30,7 +33,7 @@ if [[ -z "${_CFG}" ]]; then
 fi
 
 if [[ ! -f "${_CFG}" ]]; then
-  echo "Configuration file not found: "${_CFG}
+  echo "ERROR: PFS deployment, configuration file not found: "${_CFG}
   exit 1
 fi
 
@@ -106,6 +109,8 @@ if [ $? -eq 0 ]; then
 else
   echo ${CP4BA_INST_PFS_NAME}" already installed..."
 fi
-waitForPfsReady ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME} 5
-showPFSUrls ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME}
+if [[ "${_EMBEDDED_INST}" = "false" ]]; then
+  waitForPfsReady ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME} 5
+  showPFSUrls ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME}
+fi
 exit 0
