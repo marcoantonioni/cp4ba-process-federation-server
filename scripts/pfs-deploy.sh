@@ -65,7 +65,7 @@ metadata:
   name: ${CP4BA_INST_PFS_NAME}
   namespace: ${CP4BA_INST_PFS_NAMESPACE}
 spec:
-  appVersion: ${CP4BA_INST_PFS_APP_VER}
+  appVersion: "23.0.2"
   license:
     accept: true
   shared_configuration: 
