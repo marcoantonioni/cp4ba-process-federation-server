@@ -2,9 +2,9 @@ apiVersion: icp4a.ibm.com/v1
 kind: ProcessFederationServer
 metadata:
   name: pfs-demo
-  namespace: cp4ba-wfps-baw-pfs-demo
+  namespace: cp4ba-sogei
 spec:
-  appVersion: 23.0.2
+  appVersion: "23.0.2"
   license:
     accept: true
   shared_configuration: 
