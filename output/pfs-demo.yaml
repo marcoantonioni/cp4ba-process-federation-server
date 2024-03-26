@@ -2,7 +2,7 @@ apiVersion: icp4a.ibm.com/v1
 kind: ProcessFederationServer
 metadata:
   name: pfs-demo
-  namespace: cp4ba-sogei
+  namespace: cp4ba-workshop
 spec:
   appVersion: "23.0.2"
   license:
@@ -10,8 +10,8 @@ spec:
   shared_configuration: 
     sc_deployment_license: production
     storage_configuration:
-      sc_medium_file_storage_classname: managed-nfs-storage
-      sc_slow_file_storage_classname: managed-nfs-storage
+      sc_medium_file_storage_classname: ocs-storagecluster-cephfs
+      sc_slow_file_storage_classname: ocs-storagecluster-cephfs
   pfs_configuration:
     admin_user_id:
       - cp4admin
