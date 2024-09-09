@@ -4,7 +4,7 @@ metadata:
   name: pfs-demo
   namespace: cp4ba-wfps-baw-pfs
 spec:
-  appVersion: "23.0.2"
+  appVersion: "24.0.0"
   license:
     accept: true
   shared_configuration: 
