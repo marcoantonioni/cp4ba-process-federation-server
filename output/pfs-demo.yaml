@@ -4,14 +4,14 @@ metadata:
   name: pfs-demo
   namespace: cp4ba-wfps-baw-pfs
 spec:
-  appVersion: "24.0.0"
+  appVersion: "24.0.1"
   license:
     accept: true
   shared_configuration: 
     sc_deployment_license: production
     storage_configuration:
-      sc_medium_file_storage_classname: managed-nfs-storage
-      sc_slow_file_storage_classname: managed-nfs-storage
+      sc_medium_file_storage_classname: ibmc-vpc-file-retain-500-iops
+      sc_slow_file_storage_classname: ibmc-vpc-file-retain-500-iops
   pfs_configuration:
     admin_user_id:
       - cp4admin
