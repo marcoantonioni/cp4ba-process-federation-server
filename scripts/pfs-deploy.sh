@@ -79,7 +79,7 @@ spec:
     replicas: 2
 EOF
 
-oc create -f $OUT_FILE
+oc create -f $OUT_FILE >/dev/null 2>&1 
 
 }
 
@@ -103,9 +103,25 @@ fi
 getPfsAdminInfo true
 resourceExist ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME}
 if [ $? -eq 0 ]; then
-  echo "Ready to install..."
+  echo "Ready to create PFS '${CP4BA_INST_PFS_NAME}'"
   createPfs
-  waitForResourceCreated ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME} 5
+
+  # 18 settembre
+  sleep 5
+  while [ true ]
+  do
+    resourceExist ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME}
+    if [ $? -eq 0 ]; then
+      echo -n "."
+      sleep 2
+      createPfs
+    else
+      echo "PFS '${CP4BA_INST_PFS_NAME}' created."
+      break
+    fi
+  done  
+  # waitForResourceCreated ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME} 5
+
 else
   echo ${CP4BA_INST_PFS_NAME}" already installed..."
 fi

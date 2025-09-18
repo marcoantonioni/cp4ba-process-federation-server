@@ -125,7 +125,22 @@ showPFSUrls() {
 
 #--------------------------------------------------------
 getPfsAdminInfo () {
-  # $1: boolean skip urls 
+  # $1: boolean skip urls
+
+  # ??? 1 attendere creazione: platform-auth-idp-credentials
+  echo -n "Wait for secret 'platform-auth-idp-credentials'"
+  while [ true ]
+  do
+    resourceExist ${CP4BA_INST_PFS_NAMESPACE} secrets "platform-auth-idp-credentials"
+    if [ $? -eq 0 ]; then
+      echo -n "."
+      sleep 5
+    else
+      echo ""
+      break
+    fi
+  done
+
   export PFS_ADMINUSER=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d)
   export PFS_ADMINPASSWORD=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d)
   if [[ -z "${PFS_ADMINUSER}" ]]; then
