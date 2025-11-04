@@ -2,7 +2,7 @@ apiVersion: icp4a.ibm.com/v1
 kind: ProcessFederationServer
 metadata:
   name: pfs-demo
-  namespace: cp4ba-wfps-prod
+  namespace: cp4ba-wfps-prod-liveinst
 spec:
   appVersion: "25.0.0"
   license:
