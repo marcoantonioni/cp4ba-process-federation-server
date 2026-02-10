@@ -41,9 +41,14 @@ source $_SCRIPT_DIR/pfs-utils.sh
 #-------------------------------
 # get common values
 getTokens () {
+  _ROUTE_NAME="cp-console"
+  if [ $(oc get routes -n $1 $_ROUTE_NAME --no-headers 2> /dev/null | wc -l) -lt 1 ]; then
+    _ROUTE_NAME="platform-id-provider"
+    echo "Using console route name [${_ROUTE_NAME}]"
+  fi
 
   # get admin URL
-  CONSOLE_HOST="https://"$(oc get route -n $1 cp-console -o jsonpath="{.spec.host}")
+  CONSOLE_HOST="https://"$(oc get route -n $1 _ROUTE_NAME -o jsonpath="{.spec.host}")
   PAK_HOST="https://"$(oc get route -n $1 cpd -o jsonpath="{.spec.host}")
 
   # get IAM access token
