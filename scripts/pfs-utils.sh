@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#set -euo pipefail
+
+
 #-------------------------------
 isParamSet () {
     if [[ -z "$1" ]];
@@ -67,7 +70,7 @@ waitForResourceCreated () {
 #    echo "time to wait: $4"
 
   echo -n "Wait for resource '$3' in namespace '$1' created"
-  while [ true ]
+  while true 
   do
       resourceExist $1 $2 $3
       if [ $? -eq 0 ]; then
@@ -87,7 +90,7 @@ waitForPfsReady () {
 #    echo "time to wait: $3"
 
     echo -n "Wait for pfs '$2' in namespace '$1' to be READY"
-    while [ true ]
+    while true 
     do
       _PFS_COMPONENTS=$(oc get pfs -n $1 $2 -o jsonpath='{.status.components.pfs}')
       _pfsDeployment=$(echo $_PFS_COMPONENTS | jq .pfsDeployment | sed 's/"//g' )
@@ -129,7 +132,7 @@ getPfsAdminInfo () {
 
   # ??? 1 attendere creazione: platform-auth-idp-credentials
   echo -n "Wait for secret 'platform-auth-idp-credentials'"
-  while [ true ]
+  while true 
   do
     resourceExist ${CP4BA_INST_PFS_NAMESPACE} secrets "platform-auth-idp-credentials"
     if [ $? -eq 0 ]; then
