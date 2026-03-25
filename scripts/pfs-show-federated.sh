@@ -51,7 +51,7 @@ getTokens () {
   fi
 
   # get admin URL
-  CONSOLE_HOST="https://"$(oc get route -n $1 _ROUTE_NAME -o jsonpath="{.spec.host}")
+  CONSOLE_HOST="https://"$(oc get route -n $1 ${_ROUTE_NAME} -o jsonpath="{.spec.host}")
   PAK_HOST="https://"$(oc get route -n $1 cpd -o jsonpath="{.spec.host}")
 
   # get IAM access token

@@ -72,7 +72,7 @@ spec:
   license:
     accept: true
   shared_configuration: 
-    sc_deployment_license: production
+    sc_deployment_license: ${CP4BA_INST_LICENSE_TYPE}
     storage_configuration:
       sc_medium_file_storage_classname: ${CP4BA_INST_PFS_STORAGE_CLASS}
       sc_slow_file_storage_classname: ${CP4BA_INST_PFS_STORAGE_CLASS}
