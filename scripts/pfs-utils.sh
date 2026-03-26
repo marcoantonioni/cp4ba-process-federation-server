@@ -2,6 +2,12 @@
 
 #set -euo pipefail
 
+#--------------------------------------------------------
+_CLR_RED="\033[0;31m"   #'0;31' is Red's ANSI color code
+_CLR_GREEN="\033[0;32m"   #'0;32' is Green's ANSI color code
+_CLR_YELLOW="\033[1;33m"   #'1;32' is Yellow's ANSI color code
+_CLR_BLUE="\033[0;34m"   #'0;34' is Blue's ANSI color code
+_CLR_NC="\033[0m"
 
 #-------------------------------
 isParamSet () {
@@ -88,6 +94,7 @@ waitForPfsReady () {
 #    echo "namespace name: $1"
 #    echo "resource name: $2"
 #    echo "time to wait: $3"
+    _TRACE=$4
 
     echo -n "Wait for pfs '$2' in namespace '$1' to be READY"
     while true 
@@ -96,6 +103,9 @@ waitForPfsReady () {
       _pfsDeployment=$(echo $_PFS_COMPONENTS | jq .pfsDeployment | sed 's/"//g' )
       _pfsService=$(echo $_PFS_COMPONENTS | jq .pfsService | sed 's/"//g' )
       _pfsZenIntegration=$(echo $_PFS_COMPONENTS | jq .pfsZenIntegration | sed 's/"//g' )
+
+      [[ ${_TRACE} -eq 1 ]] && echo -e "[DEBUG] PFS readiness: _pfsDeployment[${_CLR_YELLOW}${_pfsDeployment}${_CLR_GREEN}] _pfsService[${_CLR_YELLOW}${_pfsService}${_CLR_GREEN}] _pfsZenIntegration[${_CLR_YELLOW}${_pfsZenIntegration}${_CLR_GREEN}]"
+
       if [[ "${_pfsDeployment}" = "Ready" ]] && [[ "${_pfsService}" = "Ready" ]] && [[ "${_pfsZenIntegration}" = "Ready" ]]; then
           echo ""
           echo "pfs '$2' in namespace '$1' is READY"

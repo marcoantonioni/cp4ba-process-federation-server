@@ -94,9 +94,11 @@ time ./pfs-deploy.sh -c ../configs/demo-wfps-baw.properties
 
 # References
 Planning for a CP4BA Process Federation Server production deployment
-https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployment-planning-cp4ba-process-federation-server-production
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=deployment-planning-cp4ba-process-federation-server-production
 
-Installing a CP4BA Process Federation Server production deployment
+[Installing a CP4BA Process Federation Server production deployment
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=deployments-installing-cp4ba-process-federation-server-production-deployment](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=deployments-installing-cp4ba-process-federation-server-production-deployment)
+
 [https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment)
 
 Other useful informations about PFS when used with BAW

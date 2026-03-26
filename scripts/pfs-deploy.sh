@@ -5,6 +5,8 @@
 
 _me=$(basename "$0")
 
+_TRACE=0
+
 #--------------------------------------------------------
 _CLR_RED="\033[0;31m"   #'0;31' is Red's ANSI color code
 _CLR_GREEN="\033[0;32m"   #'0;32' is Green's ANSI color code
@@ -16,17 +18,19 @@ usage () {
   echo ""
   echo -e "${_CLR_GREEN}usage: $_me
     -c full-path-to-config-file
-    -e (optional) embedded-run, no wait${_CLR_NC}"
+    -e (optional) embedded-run, no wait
+    -t (optional) trace enabled${_CLR_NC}"
 }
 
 _EMBEDDED_INST=false
 #--------------------------------------------------------
 # read command line params
-while getopts c:e flag
+while getopts c:et flag
 do
     case "${flag}" in
         c) _CFG=${OPTARG};;
         e) _EMBEDDED_INST=true;;
+        t) _TRACE=1;;
     esac
 done
 
@@ -129,7 +133,7 @@ else
   echo ${CP4BA_INST_PFS_NAME}" already installed..."
 fi
 if [[ "${_EMBEDDED_INST}" = "false" ]]; then
-  waitForPfsReady ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME} 5
+  waitForPfsReady ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME} 5 $_TRACE
   showPFSUrls ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME}
 fi
 exit 0
