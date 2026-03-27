@@ -59,11 +59,8 @@ To continue with the deployment examples, the following prerequisites must be me
 
 ```
 cd ./scripts
-time ./pfs-deploy.sh -c ../configs/pfs1.properties
+time ./pfs-deploy.sh -c ../configs/demo-wfps-pfs-production.properties
 
-# used for PFS-BAW-WFPS demos
-cd ./scripts
-time ./pfs-deploy.sh -c ../configs/demo-wfps-baw.properties
 ```
 
 ## Show federated servers
@@ -94,19 +91,27 @@ time ./pfs-deploy.sh -c ../configs/demo-wfps-baw.properties
 
 # References
 Planning for a CP4BA Process Federation Server production deployment
+
 https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=deployment-planning-cp4ba-process-federation-server-production
 
-[Installing a CP4BA Process Federation Server production deployment
-https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=deployments-installing-cp4ba-process-federation-server-production-deployment](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=deployments-installing-cp4ba-process-federation-server-production-deployment)
+Installing a CP4BA Process Federation Server production deployment
+
+[https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=deployments-installing-cp4ba-process-federation-server-production-deployment](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=deployments-installing-cp4ba-process-federation-server-production-deployment)
+
+CP4BA Process Federation Server parameters
+
+[https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=reference-cp4ba-process-federation-server-parameters](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=reference-cp4ba-process-federation-server-parameters)
 
 [https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/23.0.2?topic=deployments-installing-cp4ba-process-federation-server-production-deployment)
 
 Other useful informations about PFS when used with BAW
+
 [https://community.ibm.com/community/user/automation/blogs/zhili-guan/2023/08/24/topology-of-baw-on-containers-2301](https://community.ibm.com/community/user/automation/blogs/zhili-guan/2023/08/24/topology-of-baw-on-containers-2301)
 
 [https://community.ibm.com/community/user/automation/blogs/julien-carnec/2023/03/10/federating-on-prem-baw-from-pfs-on-containers](https://community.ibm.com/community/user/automation/blogs/julien-carnec/2023/03/10/federating-on-prem-baw-from-pfs-on-containers)
 
 Administering and operating IBM Process Federation Server Containers
+
 [https://github.com/icp4a/process-federation-server-containers](https://github.com/icp4a/process-federation-server-containers)
 
 

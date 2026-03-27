@@ -40,7 +40,7 @@ if [[ -z "${_CFG}" ]]; then
 fi
 
 if [[ ! -f "${_CFG}" ]]; then
-  echo "ERROR: PFS deployment, configuration file not found: "${_CFG}
+  echo -e "${_CLR_RED}ERROR: PFS deployment, configuration file not found: ${_CFG}${_CLR_NC}"
   exit 1
 fi
 
@@ -83,19 +83,26 @@ spec:
   pfs_configuration:
     admin_user_id:
       - ${CP4BA_INST_PFS_ADMINUSER}
-    replicas: 2
-EOF
+    replicas: ${CP4BA_INST_PFS_REPLICAS}
+    resources:
+      requests:
+        cpu: "${CP4BA_INST_PFS_RES_REQS_CPU}"
+        memory: "${CP4BA_INST_PFS_RES_REQS_MEMORY}"
+      limits:
+        cpu: "${CP4BA_INST_PFS_RES_LIMITS_REQS_CPU}"
+        memory: "${CP4BA_INST_PFS_RES_LIMITS_REQS_MEMORY}"
 
-oc create -f $OUT_FILE >/dev/null 2>&1 
+EOF
+oc create -f $OUT_FILE >/dev/null # 2>&1 
 
 }
 
 #==========================================
-echo ""
-echo "*************************************"
-echo "****** PFS Runtime Deployment ******"
-echo "*************************************"
-echo "Using config file: "${CONFIG_FILE}
+echo -e "${_CLR_GREEN}"
+echo -e "${_CLR_GREEN}************************************${_CLR_NC}"
+echo -e "${_CLR_GREEN}****** ${_CLR_YELLOW}PFS Runtime Deployment${_CLR_GREEN} ******${_CLR_NC}"
+echo -e "${_CLR_GREEN}************************************${_CLR_NC}"
+echo -e "${_CLR_GREEN}Using config file: '${_CLR_YELLOW}${CONFIG_FILE}${_CLR_GREEN}'${_CLR_NC}"
 
 source ${CONFIG_FILE}
 
@@ -103,14 +110,14 @@ verifyAllParams
 
 storageClassExist ${CP4BA_INST_PFS_STORAGE_CLASS}
 if [ $? -eq 0 ]; then
-    echo "ERROR: Storage class not found"
+    echo -e "${_CLR_RED}ERROR: Storage class not found${_CLR_NC}"
     exit 1
 fi
 
 getPfsAdminInfo true
 resourceExist ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME}
 if [ $? -eq 0 ]; then
-  echo "Ready to create PFS '${CP4BA_INST_PFS_NAME}'"
+  echo -e "${_CLR_GREEN}Ready to create PFS '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}'${_CLR_NC}"
   createPfs
 
   # 18 settembre
@@ -123,14 +130,14 @@ if [ $? -eq 0 ]; then
       sleep 2
       createPfs
     else
-      echo "PFS '${CP4BA_INST_PFS_NAME}' created."
+      echo -e "${_CLR_GREEN}PFS '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' created.${_CLR_NC}"
       break
     fi
   done  
   # waitForResourceCreated ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME} 5
 
 else
-  echo ${CP4BA_INST_PFS_NAME}" already installed..."
+  echo -e "${_CLR_GREEN}CR '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' already installed.${_CLR_NC}"
 fi
 if [[ "${_EMBEDDED_INST}" = "false" ]]; then
   waitForPfsReady ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME} 5 $_TRACE

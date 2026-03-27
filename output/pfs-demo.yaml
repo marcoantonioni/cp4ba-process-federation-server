@@ -8,7 +8,7 @@ spec:
   license:
     accept: true
   shared_configuration: 
-    sc_deployment_license: production
+    sc_deployment_license: 
     storage_configuration:
       sc_medium_file_storage_classname: ocs-external-storagecluster-cephfs
       sc_slow_file_storage_classname: ocs-external-storagecluster-cephfs
@@ -16,3 +16,11 @@ spec:
     admin_user_id:
       - cp4admin
     replicas: 2
+    resources:
+      requests:
+        cpu: "1000m"
+        memory: "1024Mi"
+      limits:
+        cpu: "2000m"
+        memory: "4Gi"
+

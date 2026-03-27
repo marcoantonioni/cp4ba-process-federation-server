@@ -75,7 +75,7 @@ waitForResourceCreated () {
 #    echo "resource name: $3"
 #    echo "time to wait: $4"
 
-  echo -n "Wait for resource '$3' in namespace '$1' created"
+  echo -n -e "${_CLR_GREEN}Wait for resource '${_CLR_YELLOW}$3${_CLR_GREEN}' in namespace '${_CLR_YELLOW}$1${_CLR_GREEN}' created...${_CLR_NC}"
   while true 
   do
       resourceExist $1 $2 $3
@@ -96,7 +96,7 @@ waitForPfsReady () {
 #    echo "time to wait: $3"
     _TRACE=$4
 
-    echo -n "Wait for pfs '$2' in namespace '$1' to be READY"
+    echo -n -e "${_CLR_GREEN}Wait for pfs '${_CLR_YELLOW}$2${_CLR_GREEN}' in namespace '${_CLR_YELLOW}$1${_CLR_GREEN}' to be ready...${_CLR_NC}"
     while true 
     do
       _PFS_COMPONENTS=$(oc get pfs -n $1 $2 -o jsonpath='{.status.components.pfs}')
@@ -108,7 +108,7 @@ waitForPfsReady () {
 
       if [[ "${_pfsDeployment}" = "Ready" ]] && [[ "${_pfsService}" = "Ready" ]] && [[ "${_pfsZenIntegration}" = "Ready" ]]; then
           echo ""
-          echo "pfs '$2' in namespace '$1' is READY"
+          #echo "pfs '$2' in namespace '$1' is READY"
           return 1
       else
           echo -n "."
@@ -129,11 +129,11 @@ getPFSUrls() {
 #-------------------------------
 showPFSUrls() {
     getPFSUrls $1 $2
-    echo "  url base: "${PFS_URL_BASE}
-    echo "  url rest: "${PFS_URL_REST}
-    echo "  url openapi explorer: "${PFS_URL_OPENAPI}
-    echo "  admin user: "${PFS_ADMINUSER}
-    echo "  admin password: "${PFS_ADMINPASSWORD}
+    echo -e "  url base: ${_CLR_YELLOW}${PFS_URL_BASE}${_CLR_NC}"
+    echo -e "  url rest: ${_CLR_YELLOW}${PFS_URL_REST}${_CLR_NC}"
+    echo -e "  url openapi explorer: ${_CLR_YELLOW}${PFS_URL_OPENAPI}${_CLR_NC}"
+    echo -e "  admin user: ${_CLR_YELLOW}${PFS_ADMINUSER}${_CLR_NC}"
+    echo -e "  admin password: ${_CLR_YELLOW}${PFS_ADMINPASSWORD}${_CLR_NC}"
 }
 
 #--------------------------------------------------------
@@ -141,7 +141,7 @@ getPfsAdminInfo () {
   # $1: boolean skip urls
 
   # ??? 1 attendere creazione: platform-auth-idp-credentials
-  echo -n "Wait for secret 'platform-auth-idp-credentials'"
+  echo -n -e "${_CLR_GREEN}Wait for secret '${_CLR_YELLOW}platform-auth-idp-credentials${_CLR_GREEN}'"
   while true 
   do
     resourceExist ${CP4BA_INST_PFS_NAMESPACE} secrets "platform-auth-idp-credentials"
@@ -157,11 +157,11 @@ getPfsAdminInfo () {
   export PFS_ADMINUSER=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d)
   export PFS_ADMINPASSWORD=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d)
   if [[ -z "${PFS_ADMINUSER}" ]]; then
-    echo "ERROR cannot get admin user name from secret"
+    echo -e "${_CLR_RED}ERROR cannot get admin user name from secret${_CLR_NC}"
     exit 1
   fi
   if [[ -z "${PFS_ADMINPASSWORD}" ]]; then
-    echo "ERROR cannot get admin password from secret"
+    echo -e "${_CLR_RED}ERROR cannot get admin password from secret${_CLR_NC}"
     exit 1
   fi
   if [[ ! "$1" = "true" ]]; then
@@ -169,7 +169,7 @@ getPfsAdminInfo () {
     if [ $? -eq 1 ]; then
       getPFSUrls ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME}
     else
-      echo "WARNING: pfs '${CP4BA_INST_PFS_NAME}' not present in namespace '${CP4BA_INST_PFS_NAMESPACE}'"
+      echo "${_CLR_GREEN}WARNING: pfs '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' not present in namespace '${_CLR_YELLOW}${CP4BA_INST_PFS_NAMESPACE}${_CLR_GREEN}'${_CLR_NC}"
     fi
   fi
 }
