@@ -140,29 +140,34 @@ showPFSUrls() {
 getPfsAdminInfo () {
   # $1: boolean skip urls
 
-  # ??? 1 attendere creazione: platform-auth-idp-credentials
-  echo -n -e "${_CLR_GREEN}Wait for secret '${_CLR_YELLOW}platform-auth-idp-credentials${_CLR_GREEN}'"
-  while true 
-  do
-    resourceExist ${CP4BA_INST_PFS_NAMESPACE} secrets "platform-auth-idp-credentials"
-    if [ $? -eq 0 ]; then
-      echo -n "."
-      sleep 5
-    else
-      echo ""
-      break
-    fi
-  done
+  if [[ "${CP4BA_INST_PFS_ADMINUSER}" = "cpadmin" ]]; then
 
-  export PFS_ADMINUSER=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d)
-  export PFS_ADMINPASSWORD=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d)
-  if [[ -z "${PFS_ADMINUSER}" ]]; then
-    echo -e "${_CLR_RED}ERROR cannot get admin user name from secret${_CLR_NC}"
-    exit 1
-  fi
-  if [[ -z "${PFS_ADMINPASSWORD}" ]]; then
-    echo -e "${_CLR_RED}ERROR cannot get admin password from secret${_CLR_NC}"
-    exit 1
+    echo -n -e "${_CLR_GREEN}Wait for secret '${_CLR_YELLOW}platform-auth-idp-credentials${_CLR_GREEN}'"
+    while true 
+    do
+      resourceExist ${CP4BA_INST_PFS_NAMESPACE} secrets "platform-auth-idp-credentials"
+      if [ $? -eq 0 ]; then
+        echo -n "."
+        sleep 5
+      else
+        echo ""
+        break
+      fi
+    done
+
+    export PFS_ADMINUSER=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d)
+    export PFS_ADMINPASSWORD=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d)
+    if [[ -z "${PFS_ADMINUSER}" ]]; then
+      echo -e "${_CLR_RED}ERROR cannot get admin user name from secret${_CLR_NC}"
+      exit 1
+    fi
+    if [[ -z "${PFS_ADMINPASSWORD}" ]]; then
+      echo -e "${_CLR_RED}ERROR cannot get admin password from secret${_CLR_NC}"
+      exit 1
+    fi
+  else
+    export PFS_ADMINUSER="${CP4BA_INST_PFS_ADMINUSER}"
+    export PFS_ADMINPASSWORD="${CP4BA_INST_PFS_ADMINPASSW}"
   fi
   if [[ ! "$1" = "true" ]]; then
     resourceExist ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME}

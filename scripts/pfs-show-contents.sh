@@ -11,6 +11,13 @@ _LAU=false
 _ALL=false
 
 #--------------------------------------------------------
+_CLR_RED="\033[0;31m"   #'0;31' is Red's ANSI color code
+_CLR_GREEN="\033[0;32m"   #'0;32' is Green's ANSI color code
+_CLR_YELLOW="\033[1;33m"   #'1;32' is Yellow's ANSI color code
+_CLR_BLUE="\033[0;34m"   #'0;34' is Blue's ANSI color code
+_CLR_NC="\033[0m"
+
+#--------------------------------------------------------
 # read command line params
 while getopts c:tpla flag
 do
@@ -35,7 +42,7 @@ if [[ -z "${_CFG}" ]]; then
 fi
 
 if [[ ! -f "${_CFG}" ]]; then
-  echo "Configuration file not found: "${_CFG}
+  echo -e "${_CLR_RED}Configuration file not found '${_CLR_YELLOW}${_CFG}${_CLR_RED}'${_CLR_NC}"
   exit 1
 fi
 
@@ -59,7 +66,7 @@ getTokens () {
   _ROUTE_NAME="cp-console"
   if [ $(oc get routes -n $1 $_ROUTE_NAME --no-headers 2> /dev/null | wc -l) -lt 1 ]; then
     _ROUTE_NAME="platform-id-provider"
-    echo "Using console route name [${_ROUTE_NAME}]"
+    # echo "Using console route name [${_ROUTE_NAME}]"
   fi
 
   # get admin URL
@@ -78,21 +85,22 @@ getTokens () {
 
 #--------------------------------------------------------
 showTasks () {
-  echo "--------------------------------------------------------------"
-  echo "Task list from Process Federation Server '${CP4BA_INST_PFS_NAME}'"
+  echo -e "${_CLR_YELLOW}--------------------------------------------------------------${_CLR_NC}"
+  echo -e "${_CLR_GREEN}Task list from Process Federation Server '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}'${_CLR_NC}"
   _URL=${PFS_URL_REST}""
   _CRED="-u ${CP4BA_INST_PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
   RESPONSE=$(curl -sk -H "Authorization: Bearer ${ZEN_TK}" -H 'accept: application/json' -X GET "${PFS_URL_REST}/v1/tasks?interaction=all")
+
   echo ${RESPONSE} | jq .items
   _NUM_TASKS=$(echo $RESPONSE | jq .size)
-  echo "Total tasks: "${_NUM_TASKS}
+  echo -e "${_CLR_GREEN}Total tasks: '${_CLR_YELLOW}${_NUM_TASKS}${_CLR_GREEN}'${_CLR_NC}"
 
 }
 
 #--------------------------------------------------------
 showProcesses () {
-  echo "--------------------------------------------------------------"
-  echo "Process list from Process Federation Server '${CP4BA_INST_PFS_NAME}'"
+  echo -e "${_CLR_YELLOW}--------------------------------------------------------------${_CLR_NC}"
+  echo -e "${_CLR_GREEN}Process list from Process Federation Server '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}'${_CLR_NC}"
   _URL=${PFS_URL_REST}""
   _CRED="-u ${CP4BA_INST_PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
   RESPONSE=$(curl -sk -X 'PUT' ${PFS_URL_REST}/v1/instances \
@@ -100,20 +108,20 @@ showProcesses () {
       -d '{ "shared": true, "teams": [ ], "interaction": "all", "size": 25, "name": "MySavedSearch", "sort": [ { "field": "instanceDueDate", "order": "ASC" } ], "conditions": [ ], "fields": [ "instanceDueDate", "instanceName", "instanceId", "instanceStatus", "instanceProcessApp", "instanceSnapshot", "bpdName" ]}')
   echo ${RESPONSE} | jq .items
   _NUM_PROCESSES=$(echo $RESPONSE | jq .size)
-  echo "Total processes: "${_NUM_PROCESSES}
+  echo -e "${_CLR_GREEN}Total processes: '${_CLR_YELLOW}${_NUM_PROCESSES}${_CLR_GREEN}'${_CLR_NC}"
 
 }
 
 #--------------------------------------------------------
 showLaunchableEntities () {
-  echo "--------------------------------------------------------------"
-  echo "Launchable entities from Process Federation Server '${CP4BA_INST_PFS_NAME}'"
+  echo -e "${_CLR_YELLOW}--------------------------------------------------------------${_CLR_NC}"
+  echo -e "${_CLR_GREEN}Launchable entities list from Process Federation Server '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}'${_CLR_NC}"
   _URL=${PFS_URL_REST}""
   _CRED="-u ${CP4BA_INST_PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
   RESPONSE=$(curl -sk -H "Authorization: Bearer ${ZEN_TK}" -H 'accept: application/json'  -X GET "${PFS_URL_REST}/v1/launchableEntities")
   echo ${RESPONSE} | jq .items
   _NUM_ENTS=$(echo ${RESPONSE} | jq '.items | length')
-  echo "Total launchable entities: "${_NUM_ENTS}
+  echo -e "${_CLR_GREEN}Total launchable entities: '${_CLR_YELLOW}${_NUM_ENTS}${_CLR_GREEN}'${_CLR_NC}"
 
 }
 
@@ -133,10 +141,10 @@ showContents () {
 
 #==========================================
 echo ""
-echo "****************************************"
-echo "****** PFS Show Contents ******"
-echo "****************************************"
-echo "Using config file: "${CONFIG_FILE}
+echo -e "${_CLR_GREEN}****************************************"
+echo -e "${_CLR_GREEN}********** ${_CLR_YELLOW}PFS Show Contents${_CLR_GREEN} ***********"
+echo -e "${_CLR_GREEN}****************************************"
+echo -e "${_CLR_GREEN}Using config file: '${_CLR_YELLOW}${CONFIG_FILE}${_CLR_GREEN}'${_CLR_NC}"
 
 source ${CONFIG_FILE}
 
@@ -147,10 +155,10 @@ getTokens ${CP4BA_INST_PFS_NAMESPACE}
 showContents
 
 if [[ "${_TSK}" = "false" ]] && [[ "${_PRO}" = "false" ]] && [[ "${_LAU}" = "false" ]] && [[ "${_ALL}" = "false" ]]; then
-  echo "ERROR: add one of the following params:"
-  echo "  -t [display task list]"
-  echo "  -p [display process list]"
-  echo "  -l [display launchable entities]"
-  echo "  -a [display all]"
+  echo -e "${_CLR_RED}ERROR: add one of the following params:"
+  echo -e "  -t [display task list]"
+  echo -e "  -p [display process list]"
+  echo -e "  -l [display launchable entities]"
+  echo -e "  -a [display all]${_CLR_NC}"
   exit 1
 fi

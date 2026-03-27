@@ -66,25 +66,25 @@ time ./pfs-deploy.sh -c ../configs/demo-wfps-pfs-production.properties
 ## Show federated servers
 ```
 # only names
-./pfs-show-federated.sh -c ../configs/pfs1.properties
+./pfs-show-federated.sh -c ../configs/demo-wfps-pfs-production.properties
 
 # all details
-./pfs-show-federated.sh -c ../configs/pfs1.properties -d
+./pfs-show-federated.sh -c ../configs/demo-wfps-pfs-production.properties -d
 ```
 
 ## Show federated contents
 ```
 # only tasks
-./pfs-show-contents.sh -c ../configs/pfs1.properties -t
+./pfs-show-contents.sh -c ../configs/demo-wfps-pfs-production.properties -t
 
 # only processes
-./pfs-show-contents.sh -c ../configs/pfs1.properties -p
+./pfs-show-contents.sh -c ../configs/demo-wfps-pfs-production.properties -p
 
 # only launchable entities
-./pfs-show-contents.sh -c ../configs/pfs1.properties -l
+./pfs-show-contents.sh -c ../configs/demo-wfps-pfs-production.properties -l
 
 # all
-./pfs-show-contents.sh -c ../configs/pfs1.properties -a
+./pfs-show-contents.sh -c ../configs/demo-wfps-pfs-production.properties -a
 
 # you may combine any parameters but -a
 ```
