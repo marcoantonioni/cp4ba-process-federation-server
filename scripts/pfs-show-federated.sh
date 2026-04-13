@@ -63,11 +63,11 @@ getTokens () {
 
   # get IAM access token
   IAM_ACCESS_TK=$(curl -sk -X POST -H "Content-Type: application/x-www-form-urlencoded;charset=UTF-8" \
-        -d "grant_type=password&username=${CP4BA_INST_PFS_ADMINUSER}&password=${PFS_ADMINPASSWORD}&scope=openid" \
+        -d "grant_type=password&username=${PFS_ADMINUSER}&password=${PFS_ADMINPASSWORD}&scope=openid" \
         ${CONSOLE_HOST}/idprovider/v1/auth/identitytoken | jq -r .access_token)
 
   echo ""
-  ZEN_TK=$(curl -sk "${PAK_HOST}/v1/preauth/validateAuth" -H "username:${CP4BA_INST_PFS_ADMINUSER}" -H "iam-token: ${IAM_ACCESS_TK}" | jq -r .accessToken)
+  ZEN_TK=$(curl -sk "${PAK_HOST}/v1/preauth/validateAuth" -H "username:${PFS_ADMINUSER}" -H "iam-token: ${IAM_ACCESS_TK}" | jq -r .accessToken)
 
 }
 
@@ -75,7 +75,7 @@ getTokens () {
 #--------------------------------------------------------
 showFederatedServers () {
   _URL=${PFS_URL_REST}""
-  _CRED="-u ${CP4BA_INST_PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
+  _CRED="-u ${PFS_ADMINUSER}:${PFS_ADMINPASSWORD}"
 
   RESPONSE=$(curl -sk -H "Authorization: Bearer ${ZEN_TK}" -H 'accept: application/json'  -X GET "${PFS_URL_REST}/v1/systems")
 
@@ -109,7 +109,7 @@ echo -e "${_CLR_GREEN}****** ${_CLR_YELLOW}PFS Show Federated Servers${_CLR_GREE
 echo -e "${_CLR_GREEN}****************************************"
 echo -e "${_CLR_GREEN}Using config file '${_CLR_YELLOW}${CONFIG_FILE}${_CLR_GREEN}'"
 
-source ${CONFIG_FILE}
+source ${CONFIG_FILE} 2> /dev/null 1> /dev/null 
 
 verifyAllParams
 getPfsAdminInfo

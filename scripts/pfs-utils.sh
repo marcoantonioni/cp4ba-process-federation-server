@@ -169,6 +169,7 @@ getPfsAdminInfo () {
     export PFS_ADMINUSER="${CP4BA_INST_PFS_ADMINUSER}"
     export PFS_ADMINPASSWORD="${CP4BA_INST_PFS_ADMINPASSW}"
   fi
+
   if [[ ! "$1" = "true" ]]; then
     resourceExist ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME}
     if [ $? -eq 1 ]; then
