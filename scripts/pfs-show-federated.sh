@@ -24,18 +24,8 @@ do
     esac
 done
 
-if [[ -z "${_CFG}" ]]; then
-  echo "usage: $_me -c path-of-config-file -d [optional, display full details]"
-  exit 1
-fi
 
-if [[ ! -f "${_CFG}" ]]; then
-  echo -e "${_CLR_GREEN}Configuration file not found '${_CLR_YELLOW}${_CFG}${_CLR_GREEN}'${_CLR_NC}"
-  exit 1
-fi
-
-export CONFIG_FILE=${_CFG}
-
+#----------------------------------------------------
 _SCRIPT_PATH="${BASH_SOURCE}"
 while [ -L "${_SCRIPT_PATH}" ]; do
   _SCRIPT_DIR="$(cd -P "$(dirname "${_SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
@@ -45,8 +35,49 @@ done
 _SCRIPT_PATH="$(readlink -f "${_SCRIPT_PATH}")"
 _SCRIPT_DIR="$(cd -P "$(dirname -- "${_SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
 
+#----------------------------------------------------
+if [[ ! -f "$_SCRIPT_DIR/../../cp4ba-logger/scripts/logger.sh" ]]; then
+  echo "Error, log package not found !"
+  echo "Clone it alongside with other cp4ba-..."
+  echo "use the command: git clone https://github.com/marcoantonioni/cp4ba-logger"
+  exit 1
+fi
+source $_SCRIPT_DIR/../../cp4ba-logger/scripts/logger.sh
+if [[ -z "${CP4BA_LOGGING_ENABLED}" ]]; then 
+  export CP4BA_LOGGING_ENABLED=true
+fi
+if [[ -z "${CP4BA_LOG_LEVEL}" ]]; then 
+  export CP4BA_LOG_LEVEL="INFO"
+fi
+if [[ -z "${CP4BA_LOG_TO_CONSOLE}" ]]; then 
+  export CP4BA_LOG_TO_CONSOLE=true
+fi
+if [[ -z "${CP4BA_LOG_TO_FILE}" ]]; then 
+  export CP4BA_LOG_TO_FILE=false
+fi
+if [[ -z "${CP4BA_LOG_FILE}" ]]; then 
+  export CP4BA_LOG_FILE=""
+fi
+if [[ -z "${CP4BA_LOG_MAX_SIZE}" ]]; then 
+  export CP4BA_LOG_MAX_SIZE=$((10 * 1024 * 1024))
+fi
+if [[ -z "${CP4BA_LOG_BACKUP_COUNT}" ]]; then 
+  export CP4BA_LOG_BACKUP_COUNT=5
+fi
+
 source $_SCRIPT_DIR/pfs-utils.sh
 
+if [[ -z "${_CFG}" ]]; then
+  echo "usage: $_me -c path-of-config-file -d [optional, display full details]"
+  exit 1
+fi
+
+if [[ ! -f "${_CFG}" ]]; then
+  log_error "${_CLR_GREEN}Configuration file not found '${_CLR_YELLOW}${_CFG}${_CLR_GREEN}'${_CLR_NC}"
+  exit 1
+fi
+
+export CONFIG_FILE=${_CFG}
 
 #-------------------------------
 # get common values
@@ -54,7 +85,6 @@ getTokens () {
   _ROUTE_NAME="cp-console"
   if [ $(oc get routes -n $1 $_ROUTE_NAME --no-headers 2> /dev/null | wc -l) -lt 1 ]; then
     _ROUTE_NAME="platform-id-provider"
-    # echo "Using console route name [${_ROUTE_NAME}]"
   fi
 
   # get admin URL
@@ -66,7 +96,6 @@ getTokens () {
         -d "grant_type=password&username=${PFS_ADMINUSER}&password=${PFS_ADMINPASSWORD}&scope=openid" \
         ${CONSOLE_HOST}/idprovider/v1/auth/identitytoken | jq -r .access_token)
 
-  echo ""
   ZEN_TK=$(curl -sk "${PAK_HOST}/v1/preauth/validateAuth" -H "username:${PFS_ADMINUSER}" -H "iam-token: ${IAM_ACCESS_TK}" | jq -r .accessToken)
 
 }
@@ -80,20 +109,17 @@ showFederatedServers () {
   RESPONSE=$(curl -sk -H "Authorization: Bearer ${ZEN_TK}" -H 'accept: application/json'  -X GET "${PFS_URL_REST}/v1/systems")
 
   if [[ "${RESPONSE}" == *"error"* ]]; then
-    echo -e "${_CLR_RED}ERROR: $RESPONSE${_CLR_NC}"
+    log_error "ERROR $RESPONSE${_CLR_NC}"
   else
     # count only non-null systemID
     _NUM_SRVS=$(echo ${RESPONSE} | jq 'del(.systems[] | select(.systemID==null)) | .systems | length')
 
-    echo -n -e "Process Federation Server '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' has ${_CLR_YELLOW}${_NUM_SRVS}${_CLR_GREEN} federated servers ready${_CLR_NC}"
+    log_info "Process Federation Server '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' has ${_CLR_YELLOW}${_NUM_SRVS}${_CLR_GREEN} federated servers ready${_CLR_NC}"
     if [[ "${_NUM_SRVS}" != "0" ]]; then
       if [[ "${_DETAILS}" = "true" ]]; then
-        echo ""
-        echo ""
         echo ${RESPONSE} | jq .
       else
-        echo " (use -d parameter for detailed output)"
-        echo ""
+        log_info " (use -d parameter for detailed output)"
         echo ${RESPONSE} | jq 'del(.systems[] | select(.systemID==null)) | .systems[] | .hostname' | sed 's/"//g'
       fi
     fi
@@ -103,11 +129,11 @@ showFederatedServers () {
 }
 
 #==========================================
-echo ""
-echo -e "${_CLR_GREEN}****************************************"
-echo -e "${_CLR_GREEN}****** ${_CLR_YELLOW}PFS Show Federated Servers${_CLR_GREEN} ******"
-echo -e "${_CLR_GREEN}****************************************"
-echo -e "${_CLR_GREEN}Using config file '${_CLR_YELLOW}${CONFIG_FILE}${_CLR_GREEN}'"
+
+log_info "${_CLR_GREEN}****************************************"
+log_info "${_CLR_GREEN}****** ${_CLR_YELLOW}PFS Show Federated Servers${_CLR_GREEN} ******"
+log_info "${_CLR_GREEN}****************************************"
+log_info "${_CLR_GREEN}Using config file '${_CLR_YELLOW}${CONFIG_FILE}${_CLR_GREEN}'"
 
 source ${CONFIG_FILE} 2> /dev/null 1> /dev/null 
 

@@ -20,7 +20,7 @@ isParamSet () {
 
 #-------------------------------
 storageClassExist () {
-    if [ $(oc get sc $1 | grep $1 | wc -l) -lt 1 ];
+    if [ $(oc get sc $1 2>/dev/null | grep $1 | wc -l) -lt 1 ];
     then
         return 0
     fi
@@ -32,25 +32,25 @@ verifyAllParams () {
 
   isParamSet $CP4BA_INST_PFS_STORAGE_CLASS}
   if [ $? -eq 0 ]; then
-      echo "ERROR: CP4BA_INST_PFS_STORAGE_CLASS not set"
+      log_error "ERROR CP4BA_INST_PFS_STORAGE_CLASS not set"
       exit 1
   fi
 
   isParamSet ${CP4BA_INST_PFS_NAME}
   if [ $? -eq 0 ]; then
-      echo "ERROR: CP4BA_INST_PFS_NAME not set"
+      log_error "ERROR CP4BA_INST_PFS_NAME not set"
       exit 1
   fi
 
   isParamSet ${CP4BA_INST_PFS_NAMESPACE}
   if [ $? -eq 0 ]; then
-      echo "ERROR: CP4BA_INST_PFS_NAMESPACE not set"
+      log_error "ERROR CP4BA_INST_PFS_NAMESPACE not set"
       exit 1
   fi
 
   isParamSet ${CP4BA_INST_PFS_APP_VER}
   if [ $? -eq 0 ]; then
-      echo "ERROR: CP4BA_INST_PFS_APP_VER not set"
+      log_error "ERROR CP4BA_INST_PFS_APP_VER not set"
       exit 1
   fi
 
@@ -61,7 +61,7 @@ resourceExist () {
 #    echo "namespace name: $1"
 #    echo "resource type: $2"
 #    echo "resource name: $3"
-  if [ $(oc get $2 -n $1 $3 2> /dev/null | grep $3 | wc -l) -lt 1 ];
+  if [ $(oc get $2 -n $1 $3 2>/dev/null | grep $3 | wc -l) -lt 1 ];
   then
       return 0
   fi
@@ -75,15 +75,13 @@ waitForResourceCreated () {
 #    echo "resource name: $3"
 #    echo "time to wait: $4"
 
-  echo -n -e "${_CLR_GREEN}Wait for resource '${_CLR_YELLOW}$3${_CLR_GREEN}' in namespace '${_CLR_YELLOW}$1${_CLR_GREEN}' created...${_CLR_NC}"
+  log_info "${_CLR_GREEN}Wait for resource '${_CLR_YELLOW}$3${_CLR_GREEN}' in namespace '${_CLR_YELLOW}$1${_CLR_GREEN}' created...${_CLR_NC}"
   while true 
   do
       resourceExist $1 $2 $3
       if [ $? -eq 0 ]; then
-          echo -n "."
           sleep $4
       else
-          echo ""
           break
       fi
   done
@@ -96,7 +94,7 @@ waitForPfsReady () {
 #    echo "time to wait: $3"
     _TRACE=$4
 
-    echo -n -e "${_CLR_GREEN}Wait for pfs '${_CLR_YELLOW}$2${_CLR_GREEN}' in namespace '${_CLR_YELLOW}$1${_CLR_GREEN}' to be ready...${_CLR_NC}"
+    log_info "${_CLR_GREEN}Wait for pfs '${_CLR_YELLOW}$2${_CLR_GREEN}' in namespace '${_CLR_YELLOW}$1${_CLR_GREEN}' to be ready...${_CLR_NC}"
     while true 
     do
       _PFS_COMPONENTS=$(oc get pfs -n $1 $2 -o jsonpath='{.status.components.pfs}')
@@ -107,11 +105,8 @@ waitForPfsReady () {
       [[ ${_TRACE} -eq 1 ]] && echo -e "[DEBUG] PFS readiness: _pfsDeployment[${_CLR_YELLOW}${_pfsDeployment}${_CLR_GREEN}] _pfsService[${_CLR_YELLOW}${_pfsService}${_CLR_GREEN}] _pfsZenIntegration[${_CLR_YELLOW}${_pfsZenIntegration}${_CLR_GREEN}]"
 
       if [[ "${_pfsDeployment}" = "Ready" ]] && [[ "${_pfsService}" = "Ready" ]] && [[ "${_pfsZenIntegration}" = "Ready" ]]; then
-          echo ""
-          #echo "pfs '$2' in namespace '$1' is READY"
           return 1
       else
-          echo -n "."
           sleep $3
       fi
     done
@@ -129,11 +124,11 @@ getPFSUrls() {
 #-------------------------------
 showPFSUrls() {
     getPFSUrls $1 $2
-    echo -e "  url base: ${_CLR_YELLOW}${PFS_URL_BASE}${_CLR_NC}"
-    echo -e "  url rest: ${_CLR_YELLOW}${PFS_URL_REST}${_CLR_NC}"
-    echo -e "  url openapi explorer: ${_CLR_YELLOW}${PFS_URL_OPENAPI}${_CLR_NC}"
-    echo -e "  admin user: ${_CLR_YELLOW}${PFS_ADMINUSER}${_CLR_NC}"
-    echo -e "  admin password: ${_CLR_YELLOW}${PFS_ADMINPASSWORD}${_CLR_NC}"
+    log_info "  url base: ${_CLR_YELLOW}${PFS_URL_BASE}${_CLR_NC}"
+    log_info "  url rest: ${_CLR_YELLOW}${PFS_URL_REST}${_CLR_NC}"
+    log_info "  url openapi explorer: ${_CLR_YELLOW}${PFS_URL_OPENAPI}${_CLR_NC}"
+    log_info "  admin user: ${_CLR_YELLOW}${PFS_ADMINUSER}${_CLR_NC}"
+    log_info "  admin password: ${_CLR_YELLOW}${PFS_ADMINPASSWORD}${_CLR_NC}"
 }
 
 #--------------------------------------------------------
@@ -142,15 +137,13 @@ getPfsAdminInfo () {
 
   if [[ "${CP4BA_INST_PFS_ADMINUSER}" = "cpadmin" ]]; then
 
-    echo -n -e "${_CLR_GREEN}Wait for secret '${_CLR_YELLOW}platform-auth-idp-credentials${_CLR_GREEN}'"
+    log_info "${_CLR_GREEN}Wait for secret '${_CLR_YELLOW}platform-auth-idp-credentials${_CLR_GREEN}'"
     while true 
     do
       resourceExist ${CP4BA_INST_PFS_NAMESPACE} secrets "platform-auth-idp-credentials"
       if [ $? -eq 0 ]; then
-        echo -n "."
         sleep 5
       else
-        echo ""
         break
       fi
     done
@@ -158,11 +151,11 @@ getPfsAdminInfo () {
     export PFS_ADMINUSER=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d)
     export PFS_ADMINPASSWORD=$(oc get secrets -n ${CP4BA_INST_PFS_NAMESPACE} platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d)
     if [[ -z "${PFS_ADMINUSER}" ]]; then
-      echo -e "${_CLR_RED}ERROR cannot get admin user name from secret${_CLR_NC}"
+      log_error "${_CLR_RED}ERROR cannot get admin user name from secret${_CLR_NC}"
       exit 1
     fi
     if [[ -z "${PFS_ADMINPASSWORD}" ]]; then
-      echo -e "${_CLR_RED}ERROR cannot get admin password from secret${_CLR_NC}"
+      log_error "${_CLR_RED}ERROR cannot get admin password from secret${_CLR_NC}"
       exit 1
     fi
   else
@@ -175,7 +168,7 @@ getPfsAdminInfo () {
     if [ $? -eq 1 ]; then
       getPFSUrls ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME}
     else
-      echo "${_CLR_GREEN}WARNING: pfs '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' not present in namespace '${_CLR_YELLOW}${CP4BA_INST_PFS_NAMESPACE}${_CLR_GREEN}'${_CLR_NC}"
+      log_warning "${_CLR_GREEN}WARNING: pfs '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' not present in namespace '${_CLR_YELLOW}${CP4BA_INST_PFS_NAMESPACE}${_CLR_GREEN}'${_CLR_NC}"
     fi
   fi
 }

@@ -34,19 +34,10 @@ do
     esac
 done
 
-if [[ -z "${_CFG}" ]]; then
-  usage
-  exit 1
-fi
-
-if [[ ! -f "${_CFG}" ]]; then
-  echo -e "${_CLR_RED}ERROR: PFS deployment, configuration file not found: ${_CFG}${_CLR_NC}"
-  exit 1
-fi
-
 export CONFIG_FILE=${_CFG}
+source ${CONFIG_FILE}
 
-
+#----------------------------------------------------
 _SCRIPT_PATH="${BASH_SOURCE}"
 while [ -L "${_SCRIPT_PATH}" ]; do
   _SCRIPT_DIR="$(cd -P "$(dirname "${_SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
@@ -56,8 +47,47 @@ done
 _SCRIPT_PATH="$(readlink -f "${_SCRIPT_PATH}")"
 _SCRIPT_DIR="$(cd -P "$(dirname -- "${_SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
 
+#----------------------------------------------------
+if [[ ! -f "$_SCRIPT_DIR/../../cp4ba-logger/scripts/logger.sh" ]]; then
+  echo "Error, log package not found !"
+  echo "Clone it alongside with other cp4ba-..."
+  echo "use the command: git clone https://github.com/marcoantonioni/cp4ba-logger"
+  exit 1
+fi
+source $_SCRIPT_DIR/../../cp4ba-logger/scripts/logger.sh
+if [[ -z "${CP4BA_LOGGING_ENABLED}" ]]; then 
+  export CP4BA_LOGGING_ENABLED=true
+fi
+if [[ -z "${CP4BA_LOG_LEVEL}" ]]; then 
+  export CP4BA_LOG_LEVEL="INFO"
+fi
+if [[ -z "${CP4BA_LOG_TO_CONSOLE}" ]]; then 
+  export CP4BA_LOG_TO_CONSOLE=true
+fi
+if [[ -z "${CP4BA_LOG_TO_FILE}" ]]; then 
+  export CP4BA_LOG_TO_FILE=false
+fi
+if [[ -z "${CP4BA_LOG_FILE}" ]]; then 
+  export CP4BA_LOG_FILE=""
+fi
+if [[ -z "${CP4BA_LOG_MAX_SIZE}" ]]; then 
+  export CP4BA_LOG_MAX_SIZE=$((10 * 1024 * 1024))
+fi
+if [[ -z "${CP4BA_LOG_BACKUP_COUNT}" ]]; then 
+  export CP4BA_LOG_BACKUP_COUNT=5
+fi
+
 source $_SCRIPT_DIR/pfs-utils.sh
 
+if [[ -z "${_CFG}" ]]; then
+  usage
+  exit 1
+fi
+
+if [[ ! -f "${_CFG}" ]]; then
+  log_error "ERROR PFS deployment, configuration file not found: ${_CFG}${_CLR_NC}"
+  exit 1
+fi
 
 #--------------------------------------------------------
 createPfs () {
@@ -97,47 +127,42 @@ oc create -f $OUT_FILE >/dev/null # 2>&1
 
 }
 
-#==========================================
-echo -e "${_CLR_GREEN}"
-echo -e "${_CLR_GREEN}************************************${_CLR_NC}"
-echo -e "${_CLR_GREEN}****** ${_CLR_YELLOW}PFS Runtime Deployment${_CLR_GREEN} ******${_CLR_NC}"
-echo -e "${_CLR_GREEN}************************************${_CLR_NC}"
-echo -e "${_CLR_GREEN}Using config file: '${_CLR_YELLOW}${CONFIG_FILE}${_CLR_GREEN}'${_CLR_NC}"
-
-source ${CONFIG_FILE}
+#--------------------------------------
+log_info "${_CLR_GREEN}==========================================${_CLR_NC}"
+log_info "${_CLR_GREEN}Deploying PFS Runtime Deployment in '${_CLR_YELLOW}${CP4BA_INST_PFS_NAMESPACE}${_CLR_GREEN}'${_CLR_NC}"
+log_info "${_CLR_GREEN}==========================================${_CLR_NC}"
+log_info "${_CLR_GREEN}Using config file '${_CLR_YELLOW}${CONFIG_FILE}${_CLR_GREEN}'${_CLR_NC}"
 
 verifyAllParams
 
 storageClassExist ${CP4BA_INST_PFS_STORAGE_CLASS}
 if [ $? -eq 0 ]; then
-    echo -e "${_CLR_RED}ERROR: Storage class not found${_CLR_NC}"
+    log_error "ERROR Storage class '${CP4BA_INST_PFS_STORAGE_CLASS}' not found"
     exit 1
 fi
 
 getPfsAdminInfo true
 resourceExist ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME}
 if [ $? -eq 0 ]; then
-  echo -e "${_CLR_GREEN}Ready to create PFS '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}'${_CLR_NC}"
+  log_info "${_CLR_GREEN}Ready to create PFS '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}'${_CLR_NC}"
   createPfs
 
-  # 18 settembre
   sleep 5
   while true 
   do
     resourceExist ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME}
     if [ $? -eq 0 ]; then
-      echo -n "."
       sleep 2
       createPfs
     else
-      echo -e "${_CLR_GREEN}PFS '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' created.${_CLR_NC}"
+      log_info "${_CLR_GREEN}PFS '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' created.${_CLR_NC}"
       break
     fi
   done  
   # waitForResourceCreated ${CP4BA_INST_PFS_NAMESPACE} pfs ${CP4BA_INST_PFS_NAME} 5
 
 else
-  echo -e "${_CLR_GREEN}CR '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' already installed.${_CLR_NC}"
+  log_info "${_CLR_GREEN}CR '${_CLR_YELLOW}${CP4BA_INST_PFS_NAME}${_CLR_GREEN}' already installed.${_CLR_NC}"
 fi
 if [[ "${_EMBEDDED_INST}" = "false" ]]; then
   waitForPfsReady ${CP4BA_INST_PFS_NAMESPACE} ${CP4BA_INST_PFS_NAME} 5 $_TRACE
