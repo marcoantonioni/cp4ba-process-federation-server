@@ -2,19 +2,19 @@ apiVersion: icp4a.ibm.com/v1
 kind: ProcessFederationServer
 metadata:
   name: pfs-demo
-  namespace: cp4ba-baw-auth-bai
+  namespace: cp4ba-wfps-pfs-production
 spec:
   appVersion: "25.0.1"
   license:
     accept: true
   shared_configuration: 
-    sc_deployment_license: 
+    sc_deployment_license: production
     storage_configuration:
       sc_medium_file_storage_classname: ocs-external-storagecluster-cephfs
       sc_slow_file_storage_classname: ocs-external-storagecluster-cephfs
   pfs_configuration:
     admin_user_id:
-      - cpadmin
+      - cp4admin
     replicas: 2
     resources:
       requests:
