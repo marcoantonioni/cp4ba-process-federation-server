@@ -1,0 +1,8 @@
+output/*.yaml
+output/*.yml
+output/*.sql
+output/*.txt
+output/*.log
+scratchpad.txt
+
+

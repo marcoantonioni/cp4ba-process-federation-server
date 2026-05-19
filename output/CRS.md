@@ -1,0 +1,1 @@
+# folder for automatically generated contents (cr.yaml, etc)
